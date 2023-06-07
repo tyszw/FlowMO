@@ -96,7 +96,7 @@ def main(path, task, representation, use_pca, n_splits, use_rmse_conf, precomput
 
 
         if representation == 'SMILES':
-            outdir_split = f'{task}/fixed_train_test_splits'
+            outdir_split = f'{task}/results/tanimoto_{n_splits}cv/fixed_train_test_splits'
             os.makedirs(outdir_split, exist_ok=True)
             np.savetxt(f'{outdir_split}/{n_splits}cv_X_train_fold{i}.txt', X_train, fmt="%s")
             np.savetxt(f'{outdir_split}/{n_splits}cv_X_test_fold{i}.txt', X_test, fmt="%s")
