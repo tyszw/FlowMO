@@ -45,9 +45,6 @@ def main(path, task, representation, use_pca, n_trials, test_set_size, use_rmse_
                     f.write(smiles + '\n')
         else:
             np.savetxt(f'precomputed_representations/{task}_{representation}.txt', X)
-            # with open(f'precomputed_representations/{task}_SMILES.txt', 'w') as f:
-            #     for smiles in smiles_list:
-            #         f.write(smiles + '\n')
 
     # If True we perform Principal Components Regression
 
