@@ -83,17 +83,24 @@ def main(path, task, representation, use_pca, n_splits, use_rmse_conf, precomput
 
         print(f'\nBeginning {i+1}th fold of {n_splits} fold cross validation...')
 
-        X_train = X[train_index]
+        if representation != 'SMILES':
+            X_train = X[train_index]
+            X_test = X[test_index]
+        else:
+            X = np.array(X)
+            X_train = X[train_index]
+            X_test = X[test_index]
         y_train = y[train_index]
-        X_test = X[test_index]
         y_test = y[test_index]
 
-        if representation == 'SMILES':
 
-            np.savetxt(f'fixed_train_test_splits/{task}/{n_splits}cv_X_train_fold{i}.txt', X_train, fmt="%s")
-            np.savetxt(f'fixed_train_test_splits/{task}/{n_splits}cv_X_test_fold{i}.txt', X_test, fmt="%s")
-            np.savetxt(f'fixed_train_test_splits/{task}/{n_splits}cv_y_train_fold{i}.txt', y_train)
-            np.savetxt(f'fixed_train_test_splits/{task}/{n_splits}cv_y_test_fold{i}.txt', y_test)
+        if representation == 'SMILES':
+            outdir_split = f'fixed_train_test_splits/{task}'
+            os.makedirs(outdir_split, exist_ok=True)
+            np.savetxt(f'{outdir_split}/{n_splits}cv_X_train_fold{i}.txt', X_train, fmt="%s")
+            np.savetxt(f'{outdir_split}/{n_splits}cv_X_test_fold{i}.txt', X_test, fmt="%s")
+            np.savetxt(f'{outdir_split}/{n_splits}cv_y_train_fold{i}.txt', y_train)
+            np.savetxt(f'{outdir_split}/{n_splits}cv_y_test_fold{i}.txt', y_test)
 
         else:
 
