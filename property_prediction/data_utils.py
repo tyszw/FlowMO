@@ -51,6 +51,10 @@ class TaskDataLoader:
             smiles_list = df['smiles'].tolist()
             property_vals = df['exp'].to_numpy()
 
+        elif self.task in ['VEGFR2', 'LCK', 'ABL', 'BACE1', 'Toxicity', 'FGFR1', 'ERBB2', 'SRC', 'EPHB4', 'Permeability', 'PDGFRbeta', 'ERBB4', 'EGFR', 'Metabolic_stability', 'HCK', 'Solubility']:
+            smiles_list = df['smiles'].tolist()
+            property_vals = df['value'].to_numpy()
+
         else:
             raise Exception('Must specify a valid task')
 
