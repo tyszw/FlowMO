@@ -5,6 +5,10 @@ Script for training a model to predict properties in the photoswitch dataset usi
 
 import argparse
 
+import os
+import sys
+sys.path.append('..')  # to import from GP.kernels and property_predition.data_utils
+
 import gpflow
 from gpflow.mean_functions import Constant
 from gpflow.utilities import print_summary
@@ -41,6 +45,9 @@ def main(path, task, representation, use_pca, n_trials, test_set_size, use_rmse_
                     f.write(smiles + '\n')
         else:
             np.savetxt(f'precomputed_representations/{task}_{representation}.txt', X)
+            # with open(f'precomputed_representations/{task}_SMILES.txt', 'w') as f:
+            #     for smiles in smiles_list:
+            #         f.write(smiles + '\n')
 
     # If True we perform Principal Components Regression
 
@@ -172,6 +179,9 @@ def main(path, task, representation, use_pca, n_trials, test_set_size, use_rmse_
         # Plot confidence-error curves
 
         confidence_percentiles = np.arange(1e-14, 100, 100/len(y_test))  # 1e-14 instead of 0 to stop weirdness with len(y_test) = 29
+
+        # add by yszw
+        os.makedirs(f'{task}/results/tanimoto', exist_ok=True)
 
         if use_rmse_conf:
 
