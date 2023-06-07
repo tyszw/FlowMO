@@ -40,12 +40,13 @@ def main(path, task, representation, use_pca, n_splits, use_rmse_conf, precomput
     X = featurise_mols(smiles_list, representation)
 
     if precompute_repr:
+        os.makedirs(f'{task}/precomputed_representations', exist_ok=True)
         if representation == 'SMILES':
-            with open(f'precomputed_representations/{task}_{representation}.txt', 'w') as f:
+            with open(f'{task}/precomputed_representations/{task}_{representation}.txt', 'w') as f:
                 for smiles in X:
                     f.write(smiles + '\n')
         else:
-            np.savetxt(f'precomputed_representations/{task}_{representation}.txt', X)
+            np.savetxt(f'{task}/precomputed_representations/{task}_{representation}.txt', X)
 
     # If True we perform Principal Components Regression
 
@@ -95,7 +96,7 @@ def main(path, task, representation, use_pca, n_splits, use_rmse_conf, precomput
 
 
         if representation == 'SMILES':
-            outdir_split = f'fixed_train_test_splits/{task}'
+            outdir_split = f'{task}/fixed_train_test_splits'
             os.makedirs(outdir_split, exist_ok=True)
             np.savetxt(f'{outdir_split}/{n_splits}cv_X_train_fold{i}.txt', X_train, fmt="%s")
             np.savetxt(f'{outdir_split}/{n_splits}cv_X_test_fold{i}.txt', X_test, fmt="%s")
@@ -178,6 +179,8 @@ def main(path, task, representation, use_pca, n_splits, use_rmse_conf, precomput
         print("mean RMSE: {:.4f} +- {:.4f}".format(np.mean(rmse_list), np.std(rmse_list)/np.sqrt(len(rmse_list))))
         print("mean MAE: {:.4f} +- {:.4f}\n".format(np.mean(mae_list), np.std(mae_list)/np.sqrt(len(mae_list))))
 
+        out_dir = f'{task}/results/tanimoto_{n_splits}cv'
+        os.makedirs(out_dir, exist_ok=True)
         with open(f'{task}/results/tanimoto_{n_splits}cv/result.txt', 'w') as f:
             f.write(f'mean R^2: {np.mean(r2_list)} +- {np.std(r2_list)/np.sqrt(len(r2_list))}\n')
             f.write(f'mean RMSE: {np.mean(rmse_list)} +- {np.std(rmse_list)/np.sqrt(len(rmse_list))}\n')
@@ -189,10 +192,6 @@ def main(path, task, representation, use_pca, n_splits, use_rmse_conf, precomput
 
         # confidence_percentiles = np.arange(1e-14, 100, 100/len(y_test))  # 1e-14 instead of 0 to stop weirdness with len(y_test) = 29
         confidence_percentiles = np.arange(1e-14, 100+100/len(y_test), 100/len(y_test))
-
-        # add by yszw
-        out_dir = f'{task}/results/tanimoto_{n_splits}cv'
-        os.makedirs(out_dir, exist_ok=True)
 
         if use_rmse_conf:
             rmse_confidence_list[rmse_confidence_list == 0] = np.nan
