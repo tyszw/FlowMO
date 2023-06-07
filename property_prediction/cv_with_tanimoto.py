@@ -163,7 +163,7 @@ def main(path, task, representation, use_pca, n_splits, use_rmse_conf, precomput
             print("MAE: {:.3f}".format(mae))
 
             pred_list[test_index] = y_pred.flatten()
-            var_list[test_index] = y_var.flatten()
+            var_list[test_index] = np.array(y_var).flatten()
             r2_list.append(score)
             rmse_list.append(rmse)
             mae_list.append(mae)
